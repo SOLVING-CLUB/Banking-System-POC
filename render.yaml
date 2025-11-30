@@ -34,6 +34,7 @@ services:
   # Note: After deployment, manually set these environment variables in Render dashboard:
   # VITE_API_BASE_URL = https://system1-gateway.onrender.com
   # VITE_SYSTEM2_BASE_URL = https://system2-corebank.onrender.com
+  # The -s flag in serve command handles SPA routing automatically
   - type: web
     name: banking-ui
     env: node
@@ -44,8 +45,4 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 18
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
 
