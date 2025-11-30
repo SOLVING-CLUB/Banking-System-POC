@@ -56,6 +56,7 @@ public class GatewayService {
         // Forward to System 2
         try {
             String url = system2Url + "/api/process";
+            System.out.println("Attempting to connect to System 2 at: " + url);
             ResponseEntity<TransactionResponse> response = restTemplate.postForEntity(
                     url, 
                     request, 
@@ -63,18 +64,21 @@ public class GatewayService {
             );
             
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                System.out.println("Successfully connected to System 2");
                 return response.getBody();
             } else {
+                System.err.println("System 2 returned status: " + response.getStatusCode());
                 return TransactionResponse.builder()
                         .status("FAILED")
                         .message("System 2 processing error")
                         .build();
             }
         } catch (Exception e) {
-            System.err.println("Error routing to System 2: " + e.getMessage());
+            System.err.println("Error routing to System 2: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            e.printStackTrace();
             return TransactionResponse.builder()
                     .status("FAILED")
-                    .message("Failed to connect to processing system")
+                    .message("Failed to connect to processing system: " + e.getMessage())
                     .build();
         }
     }
