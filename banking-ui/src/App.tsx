@@ -8,7 +8,7 @@ import type { User } from './types';
 import './App.css';
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [_user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkUser = () => {
