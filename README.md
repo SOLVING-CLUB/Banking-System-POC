@@ -56,6 +56,8 @@ Go to: **http://localhost:5173**
 
 ## Login Credentials
 
+![Authentication Page](readme%20images/auth.jpeg)
+
 ### Customer Account
 - Username: `cust1`
 - Password: `pass`
@@ -74,11 +76,17 @@ When you login as customer and want to do a top-up:
 ## How to Use
 
 1. **Login** with customer or admin credentials
+
 2. **Customer Dashboard**:
+   ![Customer Dashboard](readme%20images/customer%20dashboard.jpeg)
    - See your balance
    - View transaction history
    - Add money (top-up) using the form
+
+   ![Customer Transaction History](readme%20images/customer%20transaction%20history.jpeg)
+
 3. **Admin Dashboard**:
+   ![Super Admin Dashboard](readme%20images/super%20admin%20dashboard.jpeg)
    - See all transactions from everyone
    - Monitor system activity
 
