@@ -1,0 +1,51 @@
+services:
+  # System 2 - Core Banking Service (must start first)
+  - type: web
+    name: system2-corebank
+    env: java
+    region: oregon
+    plan: free
+    buildCommand: cd system2-corebank && mvn clean package -DskipTests
+    startCommand: cd system2-corebank && java -jar target/*.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+    healthCheckPath: /
+
+  # System 1 - Gateway Service
+  - type: web
+    name: system1-gateway
+    env: java
+    region: oregon
+    plan: free
+    buildCommand: cd system1-gateway && mvn clean package -DskipTests
+    startCommand: cd system1-gateway && java -jar target/*.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+      - key: SYSTEM2_URL
+        fromService:
+          name: system2-corebank
+          type: web
+          property: host
+    healthCheckPath: /
+
+  # Frontend - React Application
+  # Note: After deployment, manually set these environment variables in Render dashboard:
+  # VITE_API_BASE_URL = https://system1-gateway.onrender.com
+  # VITE_SYSTEM2_BASE_URL = https://system2-corebank.onrender.com
+  - type: web
+    name: banking-ui
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd banking-ui && npm ci && npm install -g serve && npm run build
+    startCommand: serve -s dist -l 10000
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
