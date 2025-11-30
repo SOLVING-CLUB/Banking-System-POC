@@ -7,7 +7,6 @@ services:
     plan: free
     dockerfilePath: ./system2-corebank/Dockerfile
     dockerContext: ./system2-corebank
-    envVars: []
     healthCheckPath: /
 
   # System 1 - Gateway Service
@@ -18,19 +17,10 @@ services:
     plan: free
     dockerfilePath: ./system1-gateway/Dockerfile
     dockerContext: ./system1-gateway
-    envVars:
-      - key: SYSTEM2_URL
-        fromService:
-          name: system2-corebank
-          type: web
-          property: host
     healthCheckPath: /
 
   # Frontend - React Application
-  # Note: After deployment, manually set these environment variables in Render dashboard:
-  # VITE_API_BASE_URL = https://system1-gateway.onrender.com
-  # VITE_SYSTEM2_BASE_URL = https://system2-corebank.onrender.com
-  # The -s flag in serve command handles SPA routing automatically
+  # All API URLs are hardcoded in the frontend code
   - type: web
     name: banking-ui
     env: node
@@ -38,7 +28,4 @@ services:
     plan: free
     buildCommand: cd banking-ui && npm ci && npm install -g serve && npm run build
     startCommand: cd banking-ui && npx serve -s dist -l $PORT
-    envVars:
-      - key: NODE_VERSION
-        value: 18
 
