@@ -17,8 +17,6 @@ public class GatewayService {
     @Value("${system2.url}")
     private String system2Url;
     
-    private final RestTemplate restTemplate;
-    
     public GatewayService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
