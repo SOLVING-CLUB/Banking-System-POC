@@ -2,10 +2,11 @@ services:
   # System 2 - Core Banking Service (must start first)
   - type: web
     name: system2-corebank
+    env: docker
     region: oregon
     plan: free
-    dockerfilePath: system2-corebank/Dockerfile
-    dockerContext: system2-corebank
+    dockerfilePath: ./system2-corebank/Dockerfile
+    dockerContext: ./system2-corebank
     envVars:
       - key: PORT
         value: 8082
@@ -14,10 +15,11 @@ services:
   # System 1 - Gateway Service
   - type: web
     name: system1-gateway
+    env: docker
     region: oregon
     plan: free
-    dockerfilePath: system1-gateway/Dockerfile
-    dockerContext: system1-gateway
+    dockerfilePath: ./system1-gateway/Dockerfile
+    dockerContext: ./system1-gateway
     envVars:
       - key: PORT
         value: 8081
