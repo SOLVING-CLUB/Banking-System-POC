@@ -2,6 +2,7 @@ package com.bank.poc.gateway.service;
 
 import com.bank.poc.gateway.dto.TransactionRequest;
 import com.bank.poc.gateway.dto.TransactionResponse;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,15 @@ public class GatewayService {
     @Value("${system2.url}")
     private String system2Url;
     
+    private final RestTemplate restTemplate;
+    
     public GatewayService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        // Trim and validate the URL
+    }
+    
+    @PostConstruct
+    public void init() {
+        // Trim and validate the URL after dependency injection
         if (system2Url != null) {
             system2Url = system2Url.trim();
             // Remove trailing slash if present
@@ -26,7 +33,7 @@ public class GatewayService {
                 system2Url = system2Url.substring(0, system2Url.length() - 1);
             }
         }
-        System.out.println("System 2 URL configured as: " + system2Url);
+        System.out.println("System 2 URL configured as: '" + system2Url + "'");
     }
     
     /**
