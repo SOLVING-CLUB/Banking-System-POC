@@ -18,6 +18,15 @@ public class GatewayService {
     
     public GatewayService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        // Trim and validate the URL
+        if (system2Url != null) {
+            system2Url = system2Url.trim();
+            // Remove trailing slash if present
+            if (system2Url.endsWith("/")) {
+                system2Url = system2Url.substring(0, system2Url.length() - 1);
+            }
+        }
+        System.out.println("System 2 URL configured as: " + system2Url);
     }
     
     /**
@@ -55,8 +64,14 @@ public class GatewayService {
         
         // Forward to System 2
         try {
-            String url = system2Url + "/api/process";
+            // Ensure URL is properly formatted
+            String baseUrl = system2Url != null ? system2Url.trim() : "";
+            if (baseUrl.endsWith("/")) {
+                baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+            }
+            String url = baseUrl + "/api/process";
             System.out.println("Attempting to connect to System 2 at: " + url);
+            System.out.println("Base URL: " + baseUrl);
             ResponseEntity<TransactionResponse> response = restTemplate.postForEntity(
                     url, 
                     request, 
