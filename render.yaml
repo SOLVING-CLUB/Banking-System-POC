@@ -7,9 +7,7 @@ services:
     plan: free
     dockerfilePath: ./system2-corebank/Dockerfile
     dockerContext: ./system2-corebank
-    envVars:
-      - key: PORT
-        value: 8082
+    envVars: []
     healthCheckPath: /
 
   # System 1 - Gateway Service
@@ -21,8 +19,6 @@ services:
     dockerfilePath: ./system1-gateway/Dockerfile
     dockerContext: ./system1-gateway
     envVars:
-      - key: PORT
-        value: 8081
       - key: SYSTEM2_URL
         fromService:
           name: system2-corebank
@@ -41,7 +37,7 @@ services:
     region: oregon
     plan: free
     buildCommand: cd banking-ui && npm ci && npm install -g serve && npm run build
-    startCommand: serve -s dist -l 10000
+    startCommand: cd banking-ui && npx serve -s dist -l $PORT
     envVars:
       - key: NODE_VERSION
         value: 18
