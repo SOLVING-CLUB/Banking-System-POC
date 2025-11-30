@@ -2,7 +2,6 @@ services:
   # System 2 - Core Banking Service (must start first)
   - type: web
     name: system2-corebank
-    env: java
     region: oregon
     plan: free
     buildCommand: cd system2-corebank && mvn clean package -DskipTests
@@ -15,7 +14,6 @@ services:
   # System 1 - Gateway Service
   - type: web
     name: system1-gateway
-    env: java
     region: oregon
     plan: free
     buildCommand: cd system1-gateway && mvn clean package -DskipTests
