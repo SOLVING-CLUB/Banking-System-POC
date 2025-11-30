@@ -4,11 +4,11 @@ services:
     name: system2-corebank
     region: oregon
     plan: free
-    buildCommand: cd system2-corebank && mvn clean package -DskipTests
-    startCommand: cd system2-corebank && java -jar target/*.jar
+    dockerfilePath: system2-corebank/Dockerfile
+    dockerContext: system2-corebank
     envVars:
-      - key: JAVA_VERSION
-        value: 17
+      - key: PORT
+        value: 8082
     healthCheckPath: /
 
   # System 1 - Gateway Service
@@ -16,11 +16,11 @@ services:
     name: system1-gateway
     region: oregon
     plan: free
-    buildCommand: cd system1-gateway && mvn clean package -DskipTests
-    startCommand: cd system1-gateway && java -jar target/*.jar
+    dockerfilePath: system1-gateway/Dockerfile
+    dockerContext: system1-gateway
     envVars:
-      - key: JAVA_VERSION
-        value: 17
+      - key: PORT
+        value: 8081
       - key: SYSTEM2_URL
         fromService:
           name: system2-corebank
