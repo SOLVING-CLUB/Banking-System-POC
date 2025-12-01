@@ -1,9 +1,9 @@
 import axios from 'axios';
 import type { TransactionRequest, TransactionResponse, Transaction } from '../types';
 
-// API URLs - localhost for local dev, production URLs for deployment
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api';
-const SYSTEM2_BASE_URL = import.meta.env.VITE_SYSTEM2_BASE_URL || 'http://localhost:8082/api';
+// Hardcoded production API URLs for Render deployment
+const API_BASE_URL = 'https://system1-gateway.onrender.com/api';
+const SYSTEM2_BASE_URL = 'https://system2-corebank-87wm.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

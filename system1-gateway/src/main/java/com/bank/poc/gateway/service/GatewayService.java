@@ -14,11 +14,10 @@ public class GatewayService {
     
     private final RestTemplate restTemplate;
     
-    // Default URLs - localhost for local dev, production for deployment
-    private static final String DEFAULT_LOCAL_URL = "http://localhost:8082";
+    // Hardcoded production URL for Render deployment
     private static final String DEFAULT_PRODUCTION_URL = "https://system2-corebank-87wm.onrender.com";
     
-    @Value("${system2.url:http://localhost:8082}")
+    @Value("${system2.url:https://system2-corebank-87wm.onrender.com}")
     private String system2Url;
     
     private String finalSystem2Url;
@@ -29,10 +28,10 @@ public class GatewayService {
     
     @PostConstruct
     public void init() {
-        // Use property value if available, otherwise use localhost default
+        // Use property value if available, otherwise use production default
         String url = (system2Url != null && !system2Url.trim().isEmpty()) 
             ? system2Url.trim() 
-            : DEFAULT_LOCAL_URL;
+            : DEFAULT_PRODUCTION_URL;
         
         // Remove trailing slash if present
         if (url.endsWith("/")) {
@@ -41,8 +40,8 @@ public class GatewayService {
         
         // Validate URL format
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            System.err.println("WARNING: System 2 URL missing protocol, using localhost default: " + DEFAULT_LOCAL_URL);
-            url = DEFAULT_LOCAL_URL;
+            System.err.println("WARNING: System 2 URL missing protocol, using production default: " + DEFAULT_PRODUCTION_URL);
+            url = DEFAULT_PRODUCTION_URL;
         }
         
         finalSystem2Url = url;
@@ -85,12 +84,12 @@ public class GatewayService {
         // Forward to System 2
         try {
             // Use the validated URL from init()
-            String baseUrl = finalSystem2Url != null ? finalSystem2Url : DEFAULT_LOCAL_URL;
+            String baseUrl = finalSystem2Url != null ? finalSystem2Url : DEFAULT_PRODUCTION_URL;
             
             // Ensure it's a valid absolute URL
             if (!baseUrl.startsWith("http://") && !baseUrl.startsWith("https://")) {
-                System.err.println("ERROR: Invalid URL format, using localhost default: " + DEFAULT_LOCAL_URL);
-                baseUrl = DEFAULT_LOCAL_URL;
+                System.err.println("ERROR: Invalid URL format, using production default: " + DEFAULT_PRODUCTION_URL);
+                baseUrl = DEFAULT_PRODUCTION_URL;
             }
             
             // Remove trailing slash if present
