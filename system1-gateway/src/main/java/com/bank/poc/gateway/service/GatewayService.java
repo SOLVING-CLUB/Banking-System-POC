@@ -14,8 +14,13 @@ public class GatewayService {
     
     private final RestTemplate restTemplate;
     
-    @Value("${system2.url}")
+    // Hardcoded production URL - this is the definitive source
+    private static final String DEFAULT_SYSTEM2_URL = "https://system2-corebank-87wm.onrender.com";
+    
+    @Value("${system2.url:https://system2-corebank-87wm.onrender.com}")
     private String system2Url;
+    
+    private String finalSystem2Url;
     
     public GatewayService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -23,15 +28,24 @@ public class GatewayService {
     
     @PostConstruct
     public void init() {
-        // Trim and validate the URL after dependency injection
-        if (system2Url != null) {
-            system2Url = system2Url.trim();
-            // Remove trailing slash if present
-            if (system2Url.endsWith("/")) {
-                system2Url = system2Url.substring(0, system2Url.length() - 1);
-            }
+        // Use property value if available, otherwise use hardcoded default
+        String url = (system2Url != null && !system2Url.trim().isEmpty()) 
+            ? system2Url.trim() 
+            : DEFAULT_SYSTEM2_URL;
+        
+        // Remove trailing slash if present
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
         }
-        System.out.println("System 2 URL configured as: '" + system2Url + "'");
+        
+        // Validate URL format
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            System.err.println("WARNING: System 2 URL missing protocol, using default: " + DEFAULT_SYSTEM2_URL);
+            url = DEFAULT_SYSTEM2_URL;
+        }
+        
+        finalSystem2Url = url;
+        System.out.println("System 2 URL configured as: '" + finalSystem2Url + "'");
     }
     
     /**
@@ -69,14 +83,28 @@ public class GatewayService {
         
         // Forward to System 2
         try {
-            // Ensure URL is properly formatted
-            String baseUrl = system2Url != null ? system2Url.trim() : "";
+            // Use the validated URL from init()
+            String baseUrl = finalSystem2Url != null ? finalSystem2Url : DEFAULT_SYSTEM2_URL;
+            
+            // Ensure it's a valid absolute URL
+            if (!baseUrl.startsWith("http://") && !baseUrl.startsWith("https://")) {
+                System.err.println("ERROR: Invalid URL format, using default: " + DEFAULT_SYSTEM2_URL);
+                baseUrl = DEFAULT_SYSTEM2_URL;
+            }
+            
+            // Remove trailing slash if present
             if (baseUrl.endsWith("/")) {
                 baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
             }
+            
             String url = baseUrl + "/api/process";
             System.out.println("Attempting to connect to System 2 at: " + url);
             System.out.println("Base URL: " + baseUrl);
+            
+            // Final validation - ensure URL is absolute
+            if (url == null || url.trim().isEmpty() || (!url.startsWith("http://") && !url.startsWith("https://"))) {
+                throw new IllegalArgumentException("Invalid URL format: " + url);
+            }
             ResponseEntity<TransactionResponse> response = restTemplate.postForEntity(
                     url, 
                     request, 
