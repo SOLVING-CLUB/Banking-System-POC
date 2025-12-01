@@ -2,6 +2,16 @@
 
 A simple banking system demo with two backend services and a web interface. Users can perform transactions, view balances, and admins can monitor all activity.
 
+## 🌐 Live Deployment
+
+**Frontend Application**: [https://banking-ui-eryw.onrender.com](https://banking-ui-eryw.onrender.com)
+
+**Backend Services**:
+- **System 1 (Gateway)**: [https://system1-gateway.onrender.com](https://system1-gateway.onrender.com)
+- **System 2 (Core Banking)**: [https://system2-corebank-87wm.onrender.com](https://system2-corebank-87wm.onrender.com)
+
+**Note**: Free tier services may take 30-60 seconds to wake up if they've been idle for more than 15 minutes.
+
 ## What This Does
 
 - **System 1 (Gateway)**: Validates and routes transactions (port 8081)
